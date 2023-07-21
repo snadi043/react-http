@@ -25,10 +25,18 @@ const DUMMY_MOVIES = [
 
 function App() {
   const[movies, setMovies] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const[error, setError] = useState(null);
 
   async function FetchMovies(){
+    setIsLoading(true);
+    setError(null);
     try{
       const apiData = await fetch('https://swapi.dev/api/films');
+      if(!apiData.ok){
+        throw new Error('Something went wrong');
+      }
+
       const resultData = await apiData.json();
       console.log(resultData);
 
@@ -39,11 +47,13 @@ function App() {
         description: movieData.opening_crawl,
         releaseDate: movieData.release_date
       };
+      
     });
     setMovies(transformedData);
     }catch (error){
-      console.error(error);
+      setError(error.message);
     }
+    setIsLoading(false);
   }
   
   return (
@@ -52,7 +62,12 @@ function App() {
         <button type="button" onClick={FetchMovies}>Fetch Movies</button>
       </section>
       <section>
-        <Movies movies={movies}/>
+        {!isLoading && movies.length === 0 && <p>No Movies Found.</p>}
+        {!isLoading && movies.length > 0 && !error && <Movies movies={movies}/>}
+        {!isLoading && error && <p>{error}</p>}
+        {isLoading && <p>Loading....</p>}
+        
+
       </section>
     </Fragment>
   );
