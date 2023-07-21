@@ -1,34 +1,13 @@
-import React, {Fragment,useState} from 'react';
+import React, {Fragment,useState, useEffect, useCallback} from 'react';
 import './App.module.css';
 import Movies from './components/Movies/Movies';
-
-const DUMMY_MOVIES = [
-  {
-  id: 1,
-  title: 'Some title 1',
-  releaseDate: '2022-07-03',
-  description: 'some description regarding some film title -1',
-  },
-  {
-    id: 2,
-    title: 'Some title 2',
-    releaseDate: '2022-04-03',
-    description: 'some description regarding some film title -2',
-  },
-  {
-    id: 3,
-    title: 'Some title 3',
-    releaseDate: '2023-07-03',
-    description: 'some description regarding some film title -3',
-  }  
-];
 
 function App() {
   const[movies, setMovies] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const[error, setError] = useState(null);
 
-  async function FetchMovies(){
+  const FetchMovies = useCallback(async () => {
     setIsLoading(true);
     setError(null);
     try{
@@ -54,7 +33,11 @@ function App() {
       setError(error.message);
     }
     setIsLoading(false);
-  }
+  }, []);
+  
+  useEffect(() => {
+    FetchMovies();
+  }, [FetchMovies]);
   
   return (
     <Fragment>
@@ -64,10 +47,8 @@ function App() {
       <section>
         {!isLoading && movies.length === 0 && <p>No Movies Found.</p>}
         {!isLoading && movies.length > 0 && !error && <Movies movies={movies}/>}
-        {!isLoading && error && <p>{error}</p>}
         {isLoading && <p>Loading....</p>}
-        
-
+        {!isLoading && error && <p>{error}</p>}
       </section>
     </Fragment>
   );
