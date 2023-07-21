@@ -1,6 +1,7 @@
 import React, {Fragment,useState, useEffect, useCallback} from 'react';
 import './App.module.css';
 import Movies from './components/Movies/Movies';
+import AddMovie from './components/AddMovie/AddMovie';
 
 function App() {
   const[movies, setMovies] = useState([]);
@@ -41,6 +42,9 @@ function App() {
   
   return (
     <Fragment>
+      <section>
+        <AddMovie/>
+      </section>
       <section>
         <button type="button" onClick={FetchMovies}>Fetch Movies</button>
       </section>

@@ -14,5 +14,5 @@ const Movies = (props) => {
                     )}
             </ul>
     );
-};
+}
 export default Movies;
